@@ -143,8 +143,8 @@ int main()
     }
 
 
-    init_audio_out();
- //   init_audio_in();
+//    init_audio_out();
+    init_audio_in();
 //
 //    struct audio_buffer_pool *ap = init_audio();
 
