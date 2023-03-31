@@ -94,13 +94,12 @@ void audio_i2s_in_setup( audio_i2s_config_t *config){
     uint32_t v2;
     uint32_t v3;
 
-    v0 = audio_pio->rxf[sm];
     v1 = audio_pio->rxf[sm];
-    v2 = audio_pio->rxf[sm];
-    v3 = audio_pio->rxf[sm];
-    v0 = audio_pio->rxf[sm];
-    v1 = audio_pio->rxf[sm];
-    v2 = audio_pio->rxf[sm];
-    v3 = audio_pio->rxf[sm];
+
+    while(1){
+        sleep_ms( 1000 );
+        v0 = audio_pio->rxf[sm];
+        v1 = audio_pio->rxf[sm];
+    }
 
 }
