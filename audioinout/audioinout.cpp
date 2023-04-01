@@ -2,6 +2,7 @@
 #include <math.h>
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
+#include "hardware/dma.h"
 #include "pico/binary_info.h"
 #include "audio_i2s_handler.h"
 
@@ -19,8 +20,9 @@ void init_audio_out() {
     audio_i2s_config_t audio_i2s_config = {
             .data_pin = PICO_AUDIO_I2S_IN_DATA_PIN,
             .clock_pin_base = PICO_AUDIO_I2S_IN_CLOCK_PIN_BASE,
-            .dma_channel = 1,       // DMA channel
-            .pio_sm = 0,            // PIO state machine
+            .dma_channel_a = 0,     // DMA channel
+            .dma_channel_b = 1,     // DMA channel
+            .pio_sm = 0             // PIO state machine
     };
 
     audio_i2s_out_setup( &audio_i2s_config );
@@ -32,11 +34,20 @@ void init_audio_in() {
     audio_i2s_config_t audio_i2s_config = {
             .data_pin = PICO_AUDIO_I2S_OUT_DATA_PIN,
             .clock_pin_base = PICO_AUDIO_I2S_OUT_CLOCK_PIN_BASE,
-            .dma_channel = 1,       // DMA channel
-            .pio_sm = 1,            // PIO state machine
+            .dma_channel_a = 2,     // DMA channel
+            .dma_channel_b = 3,     // DMA channel
+            .pio_sm = 1             // PIO state machine
     };
 
     audio_i2s_in_setup( &audio_i2s_config );
+
+}
+
+
+void init_gpio() {
+
+    gpio_init(FLAG_PIN);
+    gpio_set_dir(FLAG_PIN, GPIO_OUT);
 
 }
 
@@ -142,9 +153,11 @@ int main()
         sine_wave_table[i] = 32767 * cosf(i * 2 * (float) (M_PI / SINE_WAVE_TABLE_LEN));
     }
 
-
-//    init_audio_out();
+    init_audio_out();
     init_audio_in();
+    init_gpio();
+    enable_pio_sms();
+
 //
 //    struct audio_buffer_pool *ap = init_audio();
 
@@ -167,6 +180,9 @@ int main()
             printf("vol = %d, step = %d      \r", vol, step >> 16);
 
         }
+
+//        gpio_put(FLAG_PIN, dma_channel_is_busy( 2 ) ? 1: 0 );
+
 /*
         // Get an audio buffer - and block until one is free
         struct audio_buffer *buffer = take_audio_buffer(ap, true);
