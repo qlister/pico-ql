@@ -46,8 +46,10 @@ void init_audio_in() {
 
 void init_gpio() {
 
-    gpio_init(FLAG_PIN);
-    gpio_set_dir(FLAG_PIN, GPIO_OUT);
+    gpio_init(FLAG_PIN_A);
+    gpio_init(FLAG_PIN_B);
+    gpio_set_dir(FLAG_PIN_A, GPIO_OUT);
+    gpio_set_dir(FLAG_PIN_B, GPIO_OUT);
 
 }
 
@@ -153,9 +155,9 @@ int main()
         sine_wave_table[i] = 32767 * cosf(i * 2 * (float) (M_PI / SINE_WAVE_TABLE_LEN));
     }
 
+    init_gpio();
     init_audio_out();
     init_audio_in();
-    init_gpio();
     enable_pio_sms();
 
 //
@@ -168,7 +170,7 @@ int main()
     uint vol = 128;
 
     while (true) {
-
+/*
         int c = getchar_timeout_us(0);
         if (c >= 0) {
             if (c == '-' && vol) vol -= 4;
@@ -178,6 +180,10 @@ int main()
             if (c == 'q') break;
 
             printf("vol = %d, step = %d      \r", vol, step >> 16);
+
+        }
+*/
+        if( samples_ready() ){
 
         }
 
