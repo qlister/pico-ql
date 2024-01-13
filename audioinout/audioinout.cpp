@@ -29,6 +29,7 @@ void init_audio_out() {
 
 }
 
+
 void init_audio_in() {
 
     audio_i2s_config_t audio_i2s_config = {
