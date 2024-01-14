@@ -11,7 +11,6 @@
             "openOCDLaunchCommands": ["adapter speed 5000"],
             "gdbPath" : "gdb-multiarch",
             "device": "RP2040",
-            "showDevDebugOutput": "raw",
             "configFiles": [
                 "interface/cmsis-dap.cfg",
                 "target/rp2040.cfg"
