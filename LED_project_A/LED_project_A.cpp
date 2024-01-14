@@ -20,17 +20,13 @@ private:
     static constexpr int green_shift = 24;
 
 public:
-    uint8_t b;
-    uint8_t r;
-    uint8_t g;
-    uint8_t w;
 
     uint32_t rgbw;
 
-    rgbw_led operator= (uint32_t obj ) {
-        rgbw = obj;
-//        return rgbw;
-    }
+    //rgbw_led operator= (uint32_t obj ) {
+    //    rgbw = obj;
+    //    return ;
+    //}
 
     void set_colour( uint32_t col ){
         rgbw = col;
@@ -64,39 +60,15 @@ public:
     }
 
     void set_colour( int led, uint32_t myrgbw ){
-        leds[led] = myrgbw;
+        leds[led].rgbw = myrgbw;
     }
 
-    rgbw_led operator [](int idx){
+    rgbw_led& operator [](int idx){
         return leds[idx];
     }
 
     
 };
-
-static inline void put_pixel(uint32_t pixel_grbw) {
-    pio_sm_put_blocking(pio0, 0, pixel_grbw );
-}
-
-static inline uint32_t urgbw_u32(rgbw_led led) {
-    return (  (uint32_t)(led.w) |
-            ((uint32_t)(led.b) << 8) |
-            ((uint32_t)(led.r) << 16) |
-            ((uint32_t)(led.g) << 24) );
-}
-
-
-static inline uint32_t urgbw_u32( uint32_t colour_32 ) {
-    put_pixel( colour_32 );
-    return 0;
-}
-
-static inline uint32_t urgbw_u32(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-    return (  (uint32_t)(w) |
-            ((uint32_t)(b) << 8) |
-            ((uint32_t)(r) << 16) |
-            ((uint32_t)(g) << 24) );
-}
 
 int main() {
     stdio_init_all();
@@ -112,42 +84,17 @@ int main() {
 
     while (true) {
 
-        puts("Hello RGB and other colors!");
+        // puts("Hello RGB and other colors!");
 
-        //myLEDs[0] = rgbw_led::RED;
-        //myLEDs[1] = rgbw_led::OFF;
-        myLEDs.set_colour( 0, rgbw_led::RED );
-        myLEDs.set_colour( 1, rgbw_led::OFF );
+        myLEDs[0].rgbw = rgbw_led::RED;
+        myLEDs[1].rgbw = rgbw_led::BLUE;
         myLEDs.update();
         sleep_ms(500);
 
-        myLEDs.set_colour( 0, rgbw_led::OFF );
-        myLEDs.set_colour( 1, rgbw_led::RED );
+        myLEDs[0].rgbw = rgbw_led::BLUE;
+        myLEDs[1].rgbw = rgbw_led::RED;
         myLEDs.update();
         sleep_ms(500);
-/*
-        rgbw_led led;
-
-        led.r = 0xff;
-        led.g = 0;
-        led.b = 0;
-        led.w = 0;
-
-        put_pixel( rgbw_led::RED );  // Red
-        sleep_ms(500);
-        put_pixel( rgbw_led::GREEN );  // Green
-        sleep_ms(500);
-        put_pixel( rgbw_led::BLUE );  // Blue
-        sleep_ms(500);
-        put_pixel( rgbw_led::YELLOW );  // Yellow
-        sleep_ms(500);
-        put_pixel( rgbw_led::CYAN );  // Cyan
-        sleep_ms(500);
-        put_pixel( rgbw_led::MAGENTA );  // Magenta
-        sleep_ms(500);
-        put_pixel( rgbw_led::WHITE );  // White
-        sleep_ms(500);
-*/
 
     }
 
